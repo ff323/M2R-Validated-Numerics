@@ -19,4 +19,4 @@ function MonteCarlo(S0, K, sigma, r, T, n)
     return option_price_interval
 end
 
-println(MonteCarlo(5950, 5000, interval(0.0441, 0.0446), interval(0.1836, 0.2045), 30/365, 10000))
+println(MonteCarlo(5950, 6000, interval(0.0441, 0.0446), interval(0.1836, 0.2045), 0.08, 10000))

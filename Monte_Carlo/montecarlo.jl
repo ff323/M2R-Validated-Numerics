@@ -1,22 +1,23 @@
 using IntervalArithmetic
-using Distributions
 
-function MonteCarloSimualation(
-    S0::Float64,
-    strike_price::Float64,
-    rate_interval::Interval,
-    sigma_interval::Interval,
-    T::Float64,
-    N::Int
-)::Interval
-    #standard normal
-    Z = Normal(0, 1)
-    z = rand(Z)
+function interval_monte_carlo_option_price(S0, K, sigma, r, T, n)
 
-    ST = S0 * exp((rate_interval - 0.5 * sigma_interval^2)*T + sigma_interval * sqrt(T) * z)
-
-    println(ST)
-
+    total = Interval(0.0)
+    
+    for _ in 1:n
+        Z = randn()
+        
+        exponent = (r - sigma^2 / 2) * T + sigma * sqrt(T) * Z
+        S_T = S0 * exp(exponent)
+        
+        payoff = max(S_T - K, 0.0)
+        discounted_payoff = exp(-r * T) * payoff
+        
+        total += discounted_payoff
+    end
+    
+    option_price_interval = total / n
+    return option_price_interval
 end
 
-MonteCarloSimualation(5950.0, 7000.0, interval(0.0441, 0.0446), interval(0.1836, 0.2045), 30/365, 1000)
+println(interval_monte_carlo_option_price(5950, 5900, interval(0.0441, 0.0446), interval(0.1836, 0.2045), 30/365, 1000))

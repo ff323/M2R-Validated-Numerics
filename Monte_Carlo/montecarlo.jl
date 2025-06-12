@@ -11,12 +11,22 @@ function MonteCarlo(S0, K, sigma, r, T, n)
         S_T = S0 * exp(exponent) #geometric Brownian motion
         
         payoff = max(S_T - K, 0.0)
-        discounted_payoff = exp(-r * T) * payoff #
+        discounted_payoff = exp(-r * T) * payoff 
         
         total += discounted_payoff
     end
     option_price_interval = total / n
     return option_price_interval
 end
+S = 6000.36
+strike_prices = 5300:100:5900
+maturities = [27, 42, 55, 70, 84, 105, 116]
+σ_interval = interval(0.1676, 0.1678)
+r_interval = interval(0.04267, 0.04309)
+for x in strike_prices
+    println(x)
+    for t in maturities
+        println(MonteCarlo(S, x, σ_interval, r_interval, t/365, 10^6), " ", t)
+    end
 
-println(MonteCarlo(5950, 6000, interval(0.0441, 0.0446), interval(0.1836, 0.2045), 0.08, 10000))
+end
